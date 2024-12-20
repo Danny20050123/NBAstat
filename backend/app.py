@@ -29,13 +29,23 @@ def player_stats():
             return jsonify({'error': f'Player {player_name} not found'}), 404
 
         all_stats = []
-        current_year = 2024
-        for season in range(current_year - 10, current_year):
+        count=0
+        for season in range(2024, 2010, -1):
             season_str = f"{season}-{str(season + 1)[2:]}"
             try:
                 game_log = playergamelog.PlayerGameLog(player_id=player_id, season=season_str)
                 stats = game_log.get_data_frames()[0]
-                all_stats.extend(stats.to_dict('records'))
+                
+                
+                for game in stats.to_dict('records'):
+                    all_stats.append(game)
+                    count += 1
+                    if count >= 150:break
+                        
+                
+                if count >= 150:break
+
+
             except Exception as e:
                 print(f"Error fetching stats for season {season_str}: {e}")
                 continue
