@@ -51,8 +51,17 @@ def player_stats():
             except Exception as e:
                 print(f"Error fetching stats for season {season_str}: {e}")
                 continue
-        stat_df=pandas.concat([pandas.DataFrame(all_stats)], ignore_index=True)
+        #delete old records if player was searched for before
+        prev_df = pandas.read_csv('stats.csv')
+
+
+        prev_df = prev_df.drop(prev_df[prev_df.iloc[:, 0] == player_name].index)
+
+        prev_df.to_csv('stats.csv', index=False)
+
+        stat_df = pandas.concat([pandas.DataFrame(all_stats)], ignore_index=True)
         stat_df.to_csv("stats.csv", mode='a', index=False, header=False)
+
         print(pandas.read_csv("stats.csv").head(10))
         return jsonify({'stats': all_stats})
 
