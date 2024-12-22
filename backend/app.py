@@ -2,6 +2,7 @@ from flask import Flask, request, jsonify
 from flask_cors import CORS
 from nba_api.stats.endpoints import playergamelog
 from nba_api.stats.static import players
+import pandas
 
 app = Flask(__name__)
 CORS(app)
@@ -49,7 +50,9 @@ def player_stats():
             except Exception as e:
                 print(f"Error fetching stats for season {season_str}: {e}")
                 continue
-
+        stat_df=pandas.concat([pandas.DataFrame(all_stats)], ignore_index=True)
+        stat_df.to_csv("stats.csv", mode='a', index=False, header=False)
+        print(pandas.read_csv("stats.csv").head(10))
         return jsonify({'stats': all_stats})
 
     except Exception as e:
