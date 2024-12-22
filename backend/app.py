@@ -39,7 +39,7 @@ def player_stats():
                 
                 
                 for game in stats.to_dict('records'):
-                    game = {'PlayerName': player_name, **game}
+                    game = {'name': player_name, **game}
                     all_stats.append(game)
                     count += 1
                     if count >= 150:break
