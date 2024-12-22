@@ -28,6 +28,7 @@ body {
   place-items: center;
   min-width: 320px;
   min-height: 100vh;
+  overflow: auto;
 }
 
 h1 {
@@ -65,4 +66,31 @@ button:focus-visible {
   button {
     background-color: #f9f9f9;
   }
+}
+.table-container {
+  width: 100%; /* Full width of the page */
+    max-width: 100%; /* Ensure it doesn't exceed the screen width */
+    max-height: 1000px; /* Set maximum height */
+    overflow-y: auto; /* Enable vertical scrolling */
+    overflow-x: auto; /* Enable horizontal scrolling if necessary */
+    border: 1px solid #ddd; /* Optional: Add border for clarity */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+th, td {
+  padding: 8px;
+  text-align: left; 
+  border: 1px solid #ddd;
+}
+
+thead {
+  background-color: #f4f4f4;
+  position: sticky;
+  top: 0; 
+  z-index: 1; 
 }

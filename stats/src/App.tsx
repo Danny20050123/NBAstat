@@ -26,6 +26,7 @@ function App() {
   };
 
   return (
+    
     <div className="App">
       <h1>NBA Stat Predictor</h1>
       <div className="input-container">
