@@ -1,9 +1,10 @@
 from flask import Flask, request, jsonify
 from flask_cors import CORS
 import time
-from nba_api.stats.endpoints import playergamelog, leaguedashteamstats
+from nba_api.stats.endpoints import playergamelog, leaguedashteamstats, teamgamelog,BoxScoreAdvancedV2
 from nba_api.stats.static import players, teams
 import pandas
+import json
 
 app = Flask(__name__)
 CORS(app)
@@ -17,7 +18,7 @@ def get_player_id(player_name):
 
 def get_team_stats(season):
     team_stats = leaguedashteamstats.LeagueDashTeamStats(season=season).get_data_frames()[0]
-    time.sleep(2)
+    time.sleep(0.5)
     team_stats['Possessions'] = 0.5 * (
         team_stats['FGA'] + 
         0.4 * team_stats['FTA'] - 
@@ -44,7 +45,7 @@ def player_stats():
             season_str = f"{season}-{str(season + 1)[2:]}"
             try:
                 game_log = playergamelog.PlayerGameLog(player_id=player_id, season=season_str)
-                time.sleep(2)
+                time.sleep(0.5)
                 stats = game_log.get_data_frames()[0]
                 team_stats = get_team_stats(season_str)
 
@@ -55,7 +56,24 @@ def player_stats():
                     player_min = game['MIN']
 
                     if opponent_team_id in team_stats.index:
-                        opponent_def_rating = None
+                        defense = BoxScoreAdvancedV2(game_id=game['Game_ID']).team_stats.get_json()
+                        defense=json.loads(defense)
+                        time.sleep(0.5)
+
+
+                        headers = defense['headers']
+                        data = defense['data']
+
+                        team_id_index = headers.index('TEAM_ID')
+                        def_rating_index = headers.index('DEF_RATING')
+                        opponent_def_rating = None 
+                        for team in data:
+                            if team[team_id_index] == opponent_team_id:
+                                opponent_def_rating = team[def_rating_index]
+                                break
+
+
+                            
                         opponent_reb = team_stats.at[opponent_team_id, 'REB']
                         opponent_possessions = team_stats.at[opponent_team_id, 'Possessions']
                     else:
