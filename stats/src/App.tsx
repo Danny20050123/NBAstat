@@ -51,6 +51,7 @@ function App() {
               <th>Assists</th>
               <th>Steals</th>
               <th>Blocks</th>
+              <th>Opp Defensive Rating</th>
             </tr>
           </thead>
           <tbody>
@@ -64,6 +65,7 @@ function App() {
                 <td>{game.AST}</td>
                 <td>{game.STL}</td>
                 <td>{game.BLK}</td>
+                <td>{game.opponent_def_rating}</td>
               </tr>
             ))}
           </tbody>
