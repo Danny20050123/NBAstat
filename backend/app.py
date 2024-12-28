@@ -15,6 +15,13 @@ def get_player_id(player_name):
         return player_dict[0]['id']
     else:
         return None
+    
+def get_team_id(team_name):
+    player_dict = teams.find_teams_by_full_name(team_name)
+    if player_dict:
+        return player_dict[0]['id']
+    else:
+        return None
 
 def get_team_stats(season):
     team_stats = leaguedashteamstats.LeagueDashTeamStats(season=season).get_data_frames()[0]
@@ -38,6 +45,14 @@ def player_stats():
         player_id = get_player_id(player_name)
         if not player_id:
             return jsonify({'error': f'Player {player_name} not found'}), 404
+
+        opponent_name = request.args.get('opponent')
+        if not opponent_name:
+            return jsonify({'error': 'Opponent name is required'}), 400
+        print(opponent_name)
+        opponent_id=get_team_id(opponent_name)
+        if not opponent_id:
+            return jsonify({'error': f'Team {opponent_name} not found'}), 404
 
         all_stats = []
         count = 0

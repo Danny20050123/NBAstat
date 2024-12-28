@@ -4,12 +4,13 @@ import './App.css';
 
 function App() {
   const [playerName, setPlayerName] = useState('');
+  const [opponentTeam, setOpponentTeam] = useState('');
   const [playerStats, setPlayerStats] = useState<any[]>([]);
   const [error, setError] = useState('');
 
   const fetchPlayerStats = async () => {
     try {
-      const response = await fetch(`http://127.0.0.1:5000/player-stats?name=${encodeURIComponent(playerName)}`);
+      const response = await fetch(`http://127.0.0.1:5000/player-stats?name=${encodeURIComponent(playerName)}&opponent=${encodeURIComponent(opponentTeam)}`);
       if (!response.ok) {
         throw new Error('Failed to fetch player stats');
       }
@@ -35,6 +36,12 @@ function App() {
           placeholder="Enter NBA Player Full Name"
           value={playerName}
           onChange={(e) => setPlayerName(e.target.value)}
+        />
+        <input
+          type="text"
+          placeholder="Enter Opponent Team Name"
+          value={opponentTeam}
+          onChange={(e) => setOpponentTeam(e.target.value)}
         />
         <button onClick={fetchPlayerStats}>Fetch Stats</button>
       </div>
