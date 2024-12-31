@@ -58,5 +58,9 @@ def test(player_name):
     r2 = r2_score(y_test, y_pred)
     print(mse)
     print(r2)
+    return model
+def predict_points(model, FG_PCT, FGA, FG3A, FTA, opponent_def_rating, opponent_possessions):
+    prediction=model.predict(np.array([[FG_PCT, FGA, FG3A, FTA, opponent_def_rating, opponent_possessions]]))
+    return prediction[0]
 if __name__ == "__main__":
-    test("Anthony Edwards")
+    test("Kyrie Irving")
