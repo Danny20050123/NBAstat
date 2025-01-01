@@ -5,6 +5,7 @@ from nba_api.stats.endpoints import playergamelog, leaguedashteamstats, teamgame
 from nba_api.stats.static import players, teams
 import pandas
 import json
+from model import test, predict_points
 
 app = Flask(__name__)
 CORS(app)
@@ -126,6 +127,40 @@ def player_stats():
         stat_df.to_csv("stats.csv", mode='a', index=False, header=False)
 
         print(pandas.read_csv("stats.csv").head(10))
+        #get data averages for prediction
+        mean_last_ten_games=stat_df.loc[:9, ['FG_PCT', 'FGA', 'FG3A', 'FTA']].mean()
+        team_stats=get_team_stats(f"{2024}-{str(2024 + 1)[2:]}")
+        possessions_value = team_stats.loc[opponent_id, 'Possessions']
+
+        # get opponent def rating last ten games
+        team_log = teamgamelog.TeamGameLog(team_id=opponent_id, season=season)
+        time.sleep(0.5)
+        games_df = team_log.get_data_frames()[0]
+        games_df = games_df.sort_values('GAME_DATE', ascending=False)
+        last_ten_games = games_df.head(10)
+        sum_def_rating=0
+        for index, row in last_ten_games.iterrows():
+            gameid = row['Game_ID']
+            defense = BoxScoreAdvancedV2(game_id=gameid).team_stats.get_json()
+            defense=json.loads(defense)
+            time.sleep(0.5)
+
+            headers = defense['headers']
+            data = defense['data']
+
+            team_id_index = headers.index('TEAM_ID')
+            def_rating_index = headers.index('DEF_RATING')
+            opponent_def_rating = None 
+            for team in data:
+                if team[team_id_index] == opponent_team_id:
+                    sum_def_rating+= team[def_rating_index]
+                    break
+        sum_def_rating/=10
+        #predict with model
+        MLmodel=test(player_name)
+        pts=predict_points(MLmodel, mean_last_ten_games['FG_PCT'], mean_last_ten_games['FGA'], mean_last_ten_games['FG3A'], mean_last_ten_games['FTA'], sum_def_rating, possessions_value)
+        print("predicted")
+        print(pts)
         return jsonify({'stats': all_stats})
 
     except Exception as e:

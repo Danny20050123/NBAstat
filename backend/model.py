@@ -60,7 +60,9 @@ def test(player_name):
     print(r2)
     return model
 def predict_points(model, FG_PCT, FGA, FG3A, FTA, opponent_def_rating, opponent_possessions):
-    prediction=model.predict(np.array([[FG_PCT, FGA, FG3A, FTA, opponent_def_rating, opponent_possessions]]))
+    feature_names = ['FG_PCT', 'FGA', 'FG3A', 'FTA', 'opponent_def_rating', 'opponent_possessions']
+    X_new = pd.DataFrame([[FG_PCT, FGA, FG3A, FTA, opponent_def_rating, opponent_possessions]], columns=feature_names)
+    prediction = model.predict(X_new)
     return prediction[0]
 if __name__ == "__main__":
     test("Kyrie Irving")
