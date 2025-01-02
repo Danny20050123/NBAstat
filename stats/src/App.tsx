@@ -6,6 +6,7 @@ function App() {
   const [playerName, setPlayerName] = useState('');
   const [opponentTeam, setOpponentTeam] = useState('');
   const [playerStats, setPlayerStats] = useState<any[]>([]);
+  const [predicted, setPredicted] = useState<string | null>(null);
   const [error, setError] = useState('');
 
   const fetchPlayerStats = async () => {
@@ -16,6 +17,7 @@ function App() {
       }
       const data = await response.json();
       setPlayerStats(data.stats);
+      setPredicted(data.predicted);
       setError('');
     } catch (err) {
       if (err instanceof Error) {
@@ -46,6 +48,7 @@ function App() {
         <button onClick={fetchPlayerStats}>Fetch Stats</button>
       </div>
       {error && <p className="error">{error}</p>}
+      {predicted && <p className="predicted-info">{predicted}</p>}
       {playerStats.length > 0 && (
         <table>
           <thead>

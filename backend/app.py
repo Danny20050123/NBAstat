@@ -161,7 +161,7 @@ def player_stats():
         pts=predict_points(MLmodel, mean_last_ten_games['FG_PCT'], mean_last_ten_games['FGA'], mean_last_ten_games['FG3A'], mean_last_ten_games['FTA'], sum_def_rating, possessions_value)
         print("predicted")
         print(pts)
-        return jsonify({'stats': all_stats})
+        return jsonify({'stats': all_stats, 'predicted': f"{player_name} is predicted to score {pts} points against the {opponent_name}"})
 
     except Exception as e:
         print(f"Unhandled error: {e}")

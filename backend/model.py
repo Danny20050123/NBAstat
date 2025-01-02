@@ -65,4 +65,4 @@ def predict_points(model, FG_PCT, FGA, FG3A, FTA, opponent_def_rating, opponent_
     prediction = model.predict(X_new)
     return prediction[0]
 if __name__ == "__main__":
-    test("Kyrie Irving")
+    test("Jalen Brunson")
