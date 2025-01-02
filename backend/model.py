@@ -13,7 +13,7 @@ def visualize(player_name):
     data = pd.read_csv('stats.csv',names=columns,header=0)
     player_data=data[data['name'] == player_name]
 
-    factors= ['FG_PCT', 'FGA', 'FG3A', 'FG3_PCT', 'FTA', 'FT_PCT', 'opponent_def_rating', 'opponent_possessions']
+    factors= ['MIN','FG_PCT', 'FGA', 'FG3A', 'FG3_PCT', 'FTA', 'FT_PCT', 'opponent_def_rating', 'opponent_possessions']
     #linear, linear,   linear,  lin,   del,       linear, delete,  ???                    ???
     for factor in factors:
         sns.relplot(data=player_data, x=factor, y='PTS', kind='scatter', height=6, aspect=1.5)
@@ -65,4 +65,4 @@ def predict_points(model, FG_PCT, FGA, FG3A, FTA, opponent_def_rating, opponent_
     prediction = model.predict(X_new)
     return prediction[0]
 if __name__ == "__main__":
-    test("Jalen Brunson")
+    test("Trae Young")
